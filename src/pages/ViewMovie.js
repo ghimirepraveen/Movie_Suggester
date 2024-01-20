@@ -12,7 +12,9 @@ const ViewMovies = () => {
         `https://api.dynoacademy.com/test-api/v1/movie/${getId}`
       );
       setMovieData(response.data.singleMovieData);
-    } catch (error) {}
+    } catch (error) {
+      console.log("error due to api call");
+    }
   };
   return (
     <>
