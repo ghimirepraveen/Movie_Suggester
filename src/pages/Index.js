@@ -1,16 +1,24 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const Index = () => {
   const [movies, setMovies] = useState([]);
   const [iserror, setiserror] = useState(false);
   const [errorText, setErrorText] = useState("");
+  const [searchmovietext, setsearchtext] = useState("");
+  useEffect(() => {
+    fetchmovies();
+  }, []);
+
+  useEffect(() => {
+    fetchmovies();
+  }, [searchmovietext]);
   const fetchmovies = async () => {
     setiserror(false);
     try {
       const response = await axios.get(
-        "https://api.dynoacademy.com/test-api/v1/movies"
+        `https://api.dynoacademy.com/test-api/v1/movies?search=${searchmovietext}`
       );
       setMovies(response.data.moviesData);
     } catch (e) {
@@ -37,7 +45,15 @@ const Index = () => {
 
   return (
     <div className="App">
-      <button onClick={fetchmovies}>Get movies</button>
+      <div>
+        <input
+          type="text"
+          value={searchmovietext}
+          placeholder="provide movie name "
+          onChange={(e) => setsearchtext(e.target.value)}
+        />
+      </div>
+      {/* <button onClick={fetchmovies}>Get movies</button> */}
       <br></br>
       {iserror ? (
         <>
