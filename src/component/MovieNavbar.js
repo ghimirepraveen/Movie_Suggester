@@ -15,20 +15,20 @@ const MovieNavbar = () => {
           <Navbar.Collapse className="justify-content-end gap-3">
             <Navbar.Text>
               <Link to="/add" className="text-white">
-                add movie
+                Add movie
               </Link>
             </Navbar.Text>
             <Navbar.Text>
               {localStorage.getItem("accessToken") ? (
                 <>
                   <Link to="/profile" className="text-white">
-                    profile
+                    Profile
                   </Link>
                 </>
               ) : (
                 <>
                   <Link to="/login" className="text-white">
-                    login
+                    Login
                   </Link>
                 </>
               )}

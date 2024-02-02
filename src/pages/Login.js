@@ -1,85 +1,108 @@
 import axios from "axios";
-import { useRef } from "react";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useRef, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { Button, Container, Form, Modal } from "react-bootstrap";
 import MovieNavbar from "../component/MovieNavbar";
-import { Button, Container, Form } from "react-bootstrap";
-
 const Login = () => {
   const email = useRef();
   const password = useRef();
+
+  const [modalShown, setModalShown] = useState(false);
+  const [modalText, setModalText] = useState("");
+
   const history = useHistory();
 
-  const loginhandeler = async (e) => {
+  const loginHandler = async (e) => {
     e.preventDefault();
-
-    const logindata = {
+    const loginData = {
       email: email.current.value,
       password: password.current.value,
     };
+
     try {
       const response = await axios.post(
         "https://api.dynoacademy.com/test-api/v1/login",
-        logindata,
+        loginData,
         {
-          timeout: 1000,
+          timeout: 10000,
         }
       );
-      const getAccesToken = response.data.accessToken;
-      localStorage.setItem("accessToken", getAccesToken);
+      //   alert(response.data.message);
 
-      history.replace("/");
-      //alert(response.data.message);
+      const getAccessToken = response.data.accessToken;
+
+      localStorage.setItem("accessToken", getAccessToken);
+
       if (response.data.status === "success") {
-        alert("logined sucessfully");
+        setModalText("Logged in successfully, redirecting....");
+        setModalShown(true);
       }
+
+      setTimeout(() => {
+        history.replace("/");
+      }, 2000);
     } catch (error) {
-      try {
-        if (error.response) {
-          console.log(error.response.data.errors[0].message);
-        } else {
-          alert("something went wrong !!! Please try again !!");
-        }
-      } catch (error) {
-        alert("Unknown error Occured !try again later");
+      if (error.response) {
+        setModalText(error.response.data.errors[0].message);
+        setModalShown(true);
+      } else {
+        setModalText("Unknown error occoured! Try again later.");
+        setModalShown(true);
       }
     }
-    return (
-      <>
-        <MovieNavbar />
-        <Container>
-          <form onSubmit={loginhandeler}>
-            <br />
-            <br />
-            {/* email:
-            <br />
-            <input type="text" ref={email}></input>
-            <br />
-            <br /> */}
-            <Form.Group className="mb-3">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="Enter email"
-                ref={email}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Password</Form.Label>
-              <Form.Control type="password" ref={password} />
-            </Form.Group>
-            {/* password:
-            <br />
-            <input type="text" ref={password}></input>
-            <br />
-            <br /> */}
-            <Button variant="primary" type="submit">
-              Login
-            </Button>
-          </form>
-        </Container>
-      </>
-    );
   };
+
+  return (
+    <>
+      <MovieNavbar />
+
+      <Container>
+        <h3>Login screen</h3>
+        <form onSubmit={loginHandler}>
+          <Form.Group className="mb-3">
+            <Form.Label>Email address</Form.Label>
+            <Form.Control
+              type="email"
+              placeholder="Enter email"
+              ref={email}
+              autoComplete={false}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Password</Form.Label>
+            <Form.Control type="password" ref={password} autoComplete={false} />
+          </Form.Group>
+          <Button variant="dark" type="submit">
+            Login
+          </Button>
+        </form>
+      </Container>
+
+      <Modal
+        show={modalShown}
+        onHide={() => {
+          setModalShown(false);
+        }}
+      >
+        <Modal.Header closeButton></Modal.Header>
+        <Modal.Body>{modalText}</Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setModalShown(false);
+            }}
+          >
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <h3 className="text-center">
+        {" "}
+        please use Email: dyno@gmail.com, Pw: 123456{" "}
+      </h3>
+    </>
+  );
 };
 
 export default Login;

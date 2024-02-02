@@ -5,16 +5,22 @@ const Singlemovie = (props) => {
   return (
     <>
       <Col key={props.data.id}>
-        <Card style={{ width: "16rem", minHeight: "730px" }}>
+        <Card style={{ width: "20rem", minHeight: "820px" }}>
           <Card.Img
             variant="top"
             src={props.data.image}
-            style={{ maxWidth: "250 px" }}
+            style={{ maxWidth: "100 px" }}
           />
           <Card.Body>
             <Card.Title>{props.data.name}</Card.Title>
             <Card.Text>{props.data.info}</Card.Text>
-            <Card.Text>{props.data.rating}</Card.Text>
+
+            <Card.Text>
+              <h5>
+                Rating:-
+                {props.data.rating}
+              </h5>
+            </Card.Text>
             <Link to={`/view_movies/${props.data.id}`}>
               <Button variant="primary">View Detail</Button>
             </Link>

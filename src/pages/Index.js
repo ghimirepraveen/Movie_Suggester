@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import MovieNavbar from "../component/MovieNavbar";
 import Singlemovie from "../component/Singlemovie";
 import { Container, Form, Row } from "react-bootstrap";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const Index = () => {
   const [movies, setMovies] = useState([]);

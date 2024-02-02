@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import MovieNavbar from "../component/MovieNavbar";
 import { Button, Container } from "react-bootstrap";
 
@@ -12,15 +12,15 @@ const Profile = () => {
   }, []);
 
   const getprofile = async () => {
-    const getAccesToken = localStorage.getItem("AccessToken");
+    const getAccessToken = localStorage.getItem("accessToken");
     try {
-      const response = await axios.post(
+      const response = await axios.get(
         "https://api.dynoacademy.com/test-api/v1/me",
 
         {
           timeout: 1111,
-          header: {
-            Authorization: `Bearer ${getAccesToken}}`,
+          headers: {
+            Authorization: `Bearer ${getAccessToken}`,
           },
         }
       );
@@ -29,14 +29,14 @@ const Profile = () => {
       console(response);
     } catch (error) {
       if (error.response) {
-        console.log(error.response.data.errors[0].message);
+        alert(error.response.data.errors[0].message);
       } else {
-        alert("something went wrong !!! Please try again !!");
+        alert("Unknown error occoured! Try again later.");
       }
     }
   };
 
-  const onlogout = () => {
+  const onLogout = () => {
     localStorage.removeItem("accessToken");
     history.push("/");
   };
@@ -44,7 +44,7 @@ const Profile = () => {
     <>
       <MovieNavbar></MovieNavbar>
       <Container className="mt-1">
-        Name:{userdata.name};
+        Name:{userdata.name}
         <br />
         <br />
         Email:{userdata.email}
@@ -53,8 +53,8 @@ const Profile = () => {
         Country:{userdata.country}
         <br />
         <br />
-        <Button variant="danger" type="submit">
-          Login
+        <Button onClick={onLogout} variant="danger" type="button">
+          Logout
         </Button>
       </Container>
     </>
